@@ -1,0 +1,23 @@
+services:
+  app:
+    image: webdevops/php-nginx:8.2
+    container_name: syntax-society-forum-backend
+    working_dir: /var/www
+    volumes:
+      - ../:/var/www
+    environment:
+      - WEB_DOCUMENT_ROOT=/var/www/public
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.laravel.rule=Host(`${APP_HOST}`)"
+      - "traefik.http.routers.laravel.entrypoints=web"
+    networks:
+      - local-network
+      - custom-network
+    restart: always
+
+networks:
+  local-network:
+    external: true
+  custom-network:
+    external: true
