@@ -55,7 +55,7 @@ class AuthController extends Controller
         $token = bin2hex(random_bytes(40));
 
         // Save the token to the database
-        $user->api_token = $token;
+        $user->remember_token = $token;
         $user->save();
 
         return response()->json([
@@ -71,7 +71,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $user = $request->user();
-        $user->api_token = null;
+        $user->remember_token = null;
         $user->save();
 
         return response()->json([
@@ -110,7 +110,7 @@ class AuthController extends Controller
         // Generate token
         $token = bin2hex(random_bytes(40));
 
-        $user->api_token = $token;
+        $user->remember_token = $token;
         $user->save();
 
         return response()->json([
