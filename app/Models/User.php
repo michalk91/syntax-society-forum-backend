@@ -16,6 +16,7 @@ class User extends Authenticatable
         'email',
         'password',
         'is_admin',
+        'is_moderator',
     ];
 
     protected $hidden = [
@@ -26,5 +27,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'is_admin' => 'boolean',
+        'is_moderator' => 'boolean',
     ];
+
+    public function isAdmin(): bool
+    {
+        return (bool) $this->is_admin;
+    }
+
+    public function isModerator(): bool
+    {
+        return (bool) $this->is_moderator;
+    }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReplyController;
+use App\Http\Controllers\Admin\UserRoleController;
+
 
 Route::post('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -32,6 +34,10 @@ Route::middleware('auth:api')->group(function () {
 
     // Add replies
     Route::post('/posts/{post}/replies', [ReplyController::class, 'store']);
+
+    // Make user a moderator
+    Route::patch('/admin/users/{user}/toggle-moderator', [UserRoleController::class, 'toggleModerator'])
+        ->name('admin.users.toggleModerator');
 
 
 });
