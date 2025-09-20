@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -32,6 +33,16 @@ class PostController extends Controller
 
     public function index()
     {
+        $token = request()->bearerToken();
+
+        if ($token) {
+            $user = User::where('remember_token', $token)->first();
+
+            if ($user) {
+                auth()->setUser($user); // Manually set the user
+            }
+        }
+
         $user = auth()->user();
 
         if ($user && ($user->isAdmin() || $user->isModerator())) {
