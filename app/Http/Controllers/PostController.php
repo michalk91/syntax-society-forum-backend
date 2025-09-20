@@ -14,18 +14,14 @@ class PostController extends Controller
             'content' => 'required|string',
         ]);
 
-        /** @var \App\Models\User $user */
         $user = $request->user();
-
-        $category_id = $request->input('category_id');
-        $title = $request->input('title');
-        $content = $request->input('content');
 
         $post = Post::create([
             'user_id' => $user->id,
-            'category_id' => $category_id,
-            'title' => $title,
-            'content' => $content,
+            'category_id' => $request->input('category_id'),
+            'title' => $request->input('title'),
+            'content' => $request->input('content'),
+            'is_approved' => false,
         ]);
 
         return response()->json([
@@ -33,5 +29,36 @@ class PostController extends Controller
             'post' => $post
         ], 201);
     }
-}
 
+    public function index()
+    {
+        $user = auth()->user();
+
+        if ($user && ($user->isAdmin() || $user->isModerator())) {
+            $posts = Post::with('user', 'category')->get();
+        } else {
+            $posts = Post::approved()->with('user', 'category')->get();
+        }
+
+        return response()->json([
+            'posts' => $posts
+        ]);
+    }
+
+    public function approve(Post $post)
+    {
+        $user = auth()->user();
+
+        if (!($user->isAdmin() || $user->isModerator())) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        $post->is_approved = true;
+        $post->save();
+
+        return response()->json([
+            'message' => 'Post approved',
+            'post' => $post
+        ]);
+    }
+}

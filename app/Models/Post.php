@@ -9,7 +9,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['user_id', 'category_id', 'title', 'content'];
+    protected $fillable = ['user_id', 'category_id', 'title', 'content', 'is_approved'];
 
     public function category()
     {
@@ -24,5 +24,10 @@ class Post extends Model
     public function replies(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function scopeApproved($query)
+    {
+        return $query->where('is_approved', true);
     }
 }

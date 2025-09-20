@@ -16,6 +16,7 @@ Route::post('/admin-login', [AuthController::class, 'adminLogin'])->name('login.
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{category}', [CategoryController::class, 'show']);
 
+Route::get('/posts', [PostController::class, 'index']);
 Route::get('/posts/{post}/replies', [ReplyController::class, 'index']);
 
 Route::middleware('auth:api')->group(function () {
@@ -39,5 +40,5 @@ Route::middleware('auth:api')->group(function () {
     Route::patch('/admin/users/{user}/toggle-moderator', [UserRoleController::class, 'toggleModerator'])
         ->name('admin.users.toggleModerator');
 
-
+    Route::patch('/posts/{post}/approve', [PostController::class, 'approve']);
 });
